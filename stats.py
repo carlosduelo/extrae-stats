@@ -35,30 +35,38 @@ class Function:
 		time = 0
 		if tP == 1:
 			self.nCalls += 1
+			self.last.append((tP, tS))
 		else:
-			time = tS - self.last[-1]
-			idT = tP - 1
-			if idT == -1: idT = 0
+			try:
+				e = self.last.pop()
+				timeB = e[1] 
+				idT = e[0] - 1
+				if tP:
+					self.last.append((tP, tS))
+			except IndexError:
+				print ("IndexError: adding timeStamp")
+				exit(1)
+			time = tS - timeB
 			if idT in self.timeStamps:
-				self.timeStamps[idT] += time
+				aT = self.timeStamps[idT][0] + time
+				aC = self.timeStamps[idT][1] + 1
+				self.timeStamps[idT] = (aT, aC) 
 			else:
-				self.timeStamps[idT] = time
-
-		self.last.append(tS)
+				self.timeStamps[idT] = (time,1)
 	
 	def getCompleteTime(self):
 		c = 0
 		for i in self.timeStamps:
-			c += self.timeStamps[i]
-		return c/self.nCalls
+			c += self.timeStamps[i][0]/self.timeStamps[i][1]
+		return c
 
 	def createChart(self):
 		print ("Function " + str(events[self.idF])  + " time: " + str(self.getCompleteTime()) + " nanoseconds called: " + str(self.nCalls) + " times")
 		if len(self.timeStamps) > 1:
 			data = []
 			for i in self.timeStamps:
-				data.append((i,self.timeStamps[i] /self.nCalls))
-				print ("\t Step " + str(i) + " time: " + str(self.timeStamps[i] /self.nCalls) + " nanoseconds")
+				data.append((i,self.timeStamps[i][0] / self.timeStamps[i][1]))
+				print ("\t Step " + str(i) + " time: " + str(self.timeStamps[i][0] /self.timeStamps[i][1]) + " nanoseconds, executed " + str(self.timeStamps[i][1])+ " times.")
 
 class Thread:
 	def __init__(self, _idT):

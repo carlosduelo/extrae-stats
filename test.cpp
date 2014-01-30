@@ -1,6 +1,7 @@
 
 #include "trace.h"
 #include <iostream>
+#include <unistd.h>
 
 #include <boost/thread.hpp>
 
@@ -43,6 +44,25 @@ public:
 	}
 };
 
+int recursive(int n)
+{
+	TRACE_START_FUNCTION()
+	sleep(1);
+	if (n)
+	{
+		TRACE_ADD_MARK_FUNCTION()
+		sleep(1);
+		TRACE_ADD_MARK_FUNCTION()
+		return recursive(n-1);
+	}
+	else
+	{
+		TRACE_ADD_MARK_FUNCTION()
+		sleep(2);
+		return 0;
+	}
+}
+
 int main()
 {
 	TRACE_START_FUNCTION()
@@ -60,6 +80,9 @@ int main()
 	clase c;
 	c.function();
 	c.method();
+
+
+	recursive(5);
 
 	return 0;
 }
