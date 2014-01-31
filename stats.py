@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys
+import pylab
 import numpy 
 import matplotlib.pyplot 
 
@@ -72,12 +73,25 @@ class Thread:
 	def __init__(self, _idT):
 		self.idT = _idT
 		self.functions = {}
+		self.timeStart = -1
+		self.timeEnd = 0
 	def __repr__(self):
 		return "Thread " + str(self.idT)
 	def __str__(self):
 		return "Thread " + str(self.idT)
 
+	def printDetail(self):
+		if self.idT == 1:
+			print ("Main thread " +  
+					" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
+		else:	
+			print ("Thread " + str(self.idT) + 
+					" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
+
 	def addEvent(self, timeStamp, idF, value):
+		if self.timeStart == -1:
+			self.timeStart = timeStamp
+		self.timeEnd = timeStamp
 		if idF in self.functions:
 			self.functions[idF].addTimeStamp(value, timeStamp)
 		else:
@@ -92,21 +106,46 @@ class Thread:
 			data.append((self.functions[f].idF, self.functions[f].getCompleteTime()))
 			self.functions[f].createChart()
 
+		#matplotlib.pyplot.figure()
 		#N = len(data)
 		#x = numpy.arange(1, N + 1)
 		#y = [ num for (s, num) in data ]
 		#labels = [ s for (s, num) in data ]
 		#width = 1
 		#r1 = matplotlib.pyplot.bar( x, y, width, color="y" )
-		#matplotlib.pyplot.ylabel( 'Intensity' )
+		#matplotlib.pyplot.title( "Functions on thread " + str(self.idT))
+		#matplotlib.pyplot.ylabel( 'Nanoseconds' )
 		#matplotlib.pyplot.xticks(x, labels )
-		#matplotlib.pyplot.show()
+		#matplotlib.pyplot.savefig("thread"+str(self.idT)+".png")
+        
+class Aplication:
+	def __init__(self):
+		self.eventID = 0 
+		self.timeStart = 0
+		self.timeEnd = 0
+
+	def setEventID(self, _eventID):
+		self.eventID = _eventID
+
+	def isApplicationEvent(self, _eventID):
+		return self.eventID == _eventID
+
+	def addStart(self, t):
+		self.timeStart = t
+
+	def addEnd(self, t):
+		self.timeEnd = t
+
+	def getCompleteTime(self):
+		return self.timeEnd - self.timeStart
+	
 
 # Global variables
 states = {}
 events = {} 
 valid_events = []
 threads ={}
+application = Aplication()
 
 #################################################################
 ######### Functions to parse PCF file ##########################
@@ -148,13 +187,22 @@ def parsePRV():
 				timeStamp = int(elements[5])
 				for i in range(6,len(elements), 2):
 					e = int(elements[i])
-					if e in valid_events:
+					if application.isApplicationEvent(e):
+						v = int(elements[i+1])
+						if v:
+							application.addStart(timeStamp)
+						else:
+							application.addEnd(timeStamp)
+
+					elif e in valid_events:
 						v = int(elements[i+1])
 						#print ("Thread " + str(thread) + " timeStamp " + str(timeStamp) + " event " + str(e) + " value " + str(v))
 						t.addEvent(timeStamp, e, v)
 
 
 			elif int(elements[0]) == 3:
+				pass
+			elif elements[0] == "c":
 				pass
 			else:
 				print ("Error parsing line " + line)
@@ -260,6 +308,8 @@ def parsePCF_EVENT_TYPE(line, f):
 			e = int(elements[1])
 			n = "".join(elements[2:])
 			events[e] = Event(e, n)
+			if events[e].name == "Application":
+				application.setEventID(e)
 		except ValueError:
 			print ("Error parsing line " + line)
 
@@ -333,6 +383,43 @@ def parsePCF():
 #################################################################
 #################################################################
 
+#################################################################
+#################### SHELL FUNCTIONS ############################
+#################################################################
+
+def help_commands():
+	print ("Commands: ")
+	print ("application_time()	- show elapsed real time used by the application in nanoseconds")
+	print ("list_threads()		- show threads executed")
+	print ("threads_timeline()	- show thread timeline")
+
+def application_time():
+	print("Application time: " + str(application.getCompleteTime()) + " nanoseconds")
+
+def list_threads():
+	for t in threads:
+		threads[t].printDetail()
+
+def threads_timeline():
+	matplotlib.pyplot.figure()
+	x = pylab.randn(10000)
+	matplotlib.pyplot.hist(x, 100)
+	matplotlib.pyplot.show()
+	#matplotlib.pyplot.figure()
+	#N = len(data)
+	#x = numpy.arange(1, N + 1)
+	#y = [ num for (s, num) in data ]
+	#labels = [ s for (s, num) in data ]
+	#width = 1
+	#r1 = matplotlib.pyplot.bar( x, y, width, color="y" )
+	#matplotlib.pyplot.title( "Functions on thread " + str(self.idT))
+	#matplotlib.pyplot.ylabel( 'Nanoseconds' )
+	#matplotlib.pyplot.xticks(x, labels )
+	#matplotlib.pyplot.savefig("thread"+str(self.idT)+".png")
+	
+
+#################################################################
+#################################################################
 
 #################################################################
 ###################### START POINT ##############################
@@ -363,3 +450,7 @@ parsePRV()
 
 for t in threads:
 	threads[t].createCharts()
+
+# Start ipython for interactive charts
+from IPython import embed
+embed()
