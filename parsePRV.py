@@ -2,37 +2,14 @@
 ######### Functions to parse PRV file ##########################
 #################################################################
 
-class Application:
-	def __init__(self):
-		self.eventID = 0 
-		self.timeStart = 0
-		self.timeEnd = 0
-
-	def setEventID(self, _eventID):
-		self.eventID = _eventID
-
-	def isApplicationEvent(self, _eventID):
-		return self.eventID == _eventID
-
-	def addStart(self, t):
-		self.timeStart = t
-
-	def addEnd(self, t):
-		self.timeEnd = t
-
-	def getCompleteTime(self):
-		return self.timeEnd - self.timeStart
-
-	def printTime(self):
-		print ("Application time: " + str(self.getCompleteTime())+ " nanoseconds")
-	
-
+import application as ap
 
 class ParserPRV:
-	def __init__(self, _file_name, _parserPCF):
+	def __init__(self, _file_name, _parserPCF, _parserFUNC):
 		self.file_name = _file_name
 		self.parserPCF = _parserPCF
-		self.app		= Application()
+		self.parserFUNC = _parserFUNC
+		self.app		= ap.Application()
 
 	def parseFile(self):
 		print ("Parsing " + self.file_name + ".....")
@@ -60,12 +37,6 @@ class ParserPRV:
 					process = int(elements[3])
 					thread = int(elements[4])
 
-					#if not (thread in threads.keys()):
-					#	t = Thread(thread)
-					#	threads[thread] = t
-
-					#t = threads[thread]
-
 					timeStamp = int(elements[5])
 					for i in range(6,len(elements), 2):
 						e = int(elements[i])
@@ -76,10 +47,15 @@ class ParserPRV:
 							else:
 								self.app.addEnd(timeStamp)
 
-						#elif e in valid_events:
-						#	v = int(elements[i+1])
+						elif self.parserFUNC.idFunctionValid(e):
+							v = int(elements[i+1])
 							#print ("Thread " + str(thread) + " timeStamp " + str(timeStamp) + " event " + str(e) + " value " + str(v))
-						#	t.addEvent(timeStamp, e, v)
+							self.app.addEventFunction(thread, timeStamp, e, v)
+						elif self.parserPCF.isEvent(e):
+							self.app.addEvent(thread, timeStamp, e, v)
+						else:
+							print("Undifined event " + str(e))
+
 
 
 				elif int(elements[0]) == 3:
@@ -95,7 +71,7 @@ class ParserPRV:
 				
 			line = f.readline()
 
-	def	printAppTimes(self):
+	def	printAppTime(self):
 		self.app.printTime()
 
 #################################################################

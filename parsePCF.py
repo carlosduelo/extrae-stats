@@ -223,6 +223,9 @@ class ParserPCF:
 	def isAppEvent(self, e):
 		return self.appEvent == e
 
+	def isEvent(self, e):
+		return e in self.events
+
 	def printDefaultOptions(self):
 		print ("File name: " + self.file_name)
 		print ("Level: " + self.level)
