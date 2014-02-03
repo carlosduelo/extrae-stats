@@ -2,8 +2,11 @@
 
 import sys
 import pylab
-import numpy 
-import matplotlib.pyplot 
+import numpy as np
+import matplotlib.pyplot as plt 
+import parseFUNC as pFUNC
+import parsePCF as pPCF
+import parsePRV as pPRV
 
 print ("Creating statistics....")
 
@@ -12,25 +15,16 @@ PRV="NOT FOUND"
 PCF="NOT FOUND"
 FUNC="NOT FOUND"
 
-class Event:
-	def __init__(self, _idE, _name):
-		self.idE = _idE
-		self.name = _name
-	def __repr__(self):
-		return self.name + " " + str(self.idE)
-	def __str__(self):
-		return self.name + " " + str(self.idE)
-
 class Function:
 	def __init__(self, _idF):
 		self.idF = _idF
-		self.timeStamps = {} 
+		self.timeStamps = {} # idT : (average, time, min, max) 
 		self.nCalls = 0
 		self.last= []
 	def __repr__(self):
-		return "Function " + str(self.idF)
+		return "Function " + events[self.idF].name + " " + str(self.idF)
 	def __str__(self):
-		return "Function " + str(self.idF)
+		return "Function " + events[self.idF].name + " " + str(self.idF)
 
 	def addTimeStamp(self, tP, tS):
 		time = 0
@@ -51,9 +45,15 @@ class Function:
 			if idT in self.timeStamps:
 				aT = self.timeStamps[idT][0] + time
 				aC = self.timeStamps[idT][1] + 1
-				self.timeStamps[idT] = (aT, aC) 
+				mT = time 
+				if mT > self.timeStamps[idT][2]:
+					mT = self.timeStamps[idT][2]
+				MT = time 
+				if MT < self.timeStamps[idT][3]:
+					MT = self.timeStamps[idT][3]
+				self.timeStamps[idT] = (aT, aC, mT, MT) 
 			else:
-				self.timeStamps[idT] = (time,1)
+				self.timeStamps[idT] = (time,1, time, time)
 	
 	def getCompleteTime(self):
 		c = 0
@@ -79,6 +79,16 @@ class Thread:
 		return "Thread " + str(self.idT)
 	def __str__(self):
 		return "Thread " + str(self.idT)
+
+	def printListFunctions(self):
+		for i in self.functions:
+			print (self.functions[i])
+			
+	def nCallsFunction(self, func):
+		if func in self.functions:
+			return self.functions[func].nCalls
+		else:
+			return 0
 
 	def printDetail(self):
 		if self.idT == 1:
@@ -118,270 +128,12 @@ class Thread:
 		#matplotlib.pyplot.xticks(x, labels )
 		#matplotlib.pyplot.savefig("thread"+str(self.idT)+".png")
         
-class Aplication:
-	def __init__(self):
-		self.eventID = 0 
-		self.timeStart = 0
-		self.timeEnd = 0
-
-	def setEventID(self, _eventID):
-		self.eventID = _eventID
-
-	def isApplicationEvent(self, _eventID):
-		return self.eventID == _eventID
-
-	def addStart(self, t):
-		self.timeStart = t
-
-	def addEnd(self, t):
-		self.timeEnd = t
-
-	def getCompleteTime(self):
-		return self.timeEnd - self.timeStart
-	
-
 # Global variables
 states = {}
 events = {} 
 valid_events = []
 threads ={}
-application = Aplication()
 
-#################################################################
-######### Functions to parse PCF file ##########################
-#################################################################
-
-def parsePRV():
-	print ("Parsing " + PRV + ".....")
-
-	f = open(PRV)
-
-	state = -1
-	line = f.readline()
-
-	if "#Paraver" in line[0:8]:
-		line = f.readline()
-	else:
-		print ("Error no Paraver file")
-		exit(1)
-
-	while line :
-		elements = line.split(":")
-
-		try:
-
-			if int(elements[0]) == 1:
-				pass
-			elif int(elements[0]) == 2:
-				if int(elements[2]) != 1:
-					print ("Error, different apps? " + line)
-				process = int(elements[3])
-				thread = int(elements[4])
-
-				if not (thread in threads.keys()):
-					t = Thread(thread)
-					threads[thread] = t
-
-				t = threads[thread]
-
-				timeStamp = int(elements[5])
-				for i in range(6,len(elements), 2):
-					e = int(elements[i])
-					if application.isApplicationEvent(e):
-						v = int(elements[i+1])
-						if v:
-							application.addStart(timeStamp)
-						else:
-							application.addEnd(timeStamp)
-
-					elif e in valid_events:
-						v = int(elements[i+1])
-						#print ("Thread " + str(thread) + " timeStamp " + str(timeStamp) + " event " + str(e) + " value " + str(v))
-						t.addEvent(timeStamp, e, v)
-
-
-			elif int(elements[0]) == 3:
-				pass
-			elif elements[0] == "c":
-				pass
-			else:
-				print ("Error parsing line " + line)
-				exit(1)
-				
-		except ValueError:
-			print ("Error parsing line " + line)
-			
-		line = f.readline()
-
-
-#################################################################
-#################################################################
-
-#################################################################
-######### Functions to parse FUNC file ##########################
-#################################################################
-
-def parseFUNC():
-	print ("Parsing " + FUNC + ".....")
-
-	f = open(FUNC)
-	line = f.readline()
-
-	if "#Functions" in line[0:10]:
-		line = f.readline()
-	else:
-		print ("Error no Functions file")
-		exit(1)
-
-	while line :
-		try:
-			valid_events.append(int(line))
-		except ValueError:
-			print ("Error parsing line: " + line)
-			exit(1)
-		line = f.readline()
-
-
-#################################################################
-#################################################################
-
-
-#################################################################
-######### Functions to parse PCF file ##########################
-#################################################################
-
-def parsePCF_DEFAULT_OPTIONS(line):
-	if "LEVEL" in line[0:5]:
-		pass
-	elif "UNITS" in line[0:5]:
-		pass
-	elif "LOOK_BACK" in line[0:9]:
-		pass
-	elif "SPEED" in line[0:5]:
-		pass
-	elif "FLAG_ICONS" in line[0:10]:
-		pass
-	elif "NUM_OF_STATE_COLORS" in line[0:19]:
-		pass
-	elif "YMAX_SCALE" in line[0:10]:
-		pass
-	elif "\n" in line[0]:
-		pass
-	else:
-		print ("Error parsing line: " + line)
-
-def parsePCF_DEFAULT_SEMANTIC(line):
-	if "THREAD_FUNC" in line[0:11]:
-		pass
-	elif "\n" in line[0]:
-		pass
-	else:
-		print ("Error parsing line: " + line)
-
-def parsePCF_STATES_COLOR(line):
-	if "THREAD_FUNC" in line[0:11]:
-		pass
-	elif "\n" in line[0]:
-		pass
-
-def parsePCF_STATES(line):
-	if "\n" in line[0]:
-		pass
-	else:
-		elements = line.split()
-		try:
-			s = int(elements[0])
-			states[elements[1]] = s
-		except ValueError:
-			print ("Error parsing line " + line)
-		
-def parsePCF_EVENT_TYPE(line, f):
-	if "\n" in line[0]:
-		pass
-	elif "VALUES" in line[0:6]:
-		l = f.readline()
-		while l != "\n":
-			l = f.readline()
-	else:
-		elements = line.split()
-		try:
-			e = int(elements[1])
-			n = "".join(elements[2:])
-			events[e] = Event(e, n)
-			if events[e].name == "Application":
-				application.setEventID(e)
-		except ValueError:
-			print ("Error parsing line " + line)
-
-def parsePCF_GRADIENT_COLOR(line):
-	if "\n" in line[0]:
-		pass
-	else:
-		elements = line.split(" ")
-
-def parsePCF_GRADIENT_NAMES(line):
-	if "\n" in line[0]:
-		pass
-	else:
-		elements = line.split(" ")
-
-# STATES
-# 
-# 0 "DEFAULT_OPTIONS"
-# 1 "DEFAULT_SEMANTIC"
-# 2 "STATES_COLOR"
-# 3 "STATES"
-# 4 "EVENT_TYPE"
-# 5 "GRADIENT_COLOR"
-# 6 "GRADIENT_NAMES"
-# 
-def parsePCF():
-	print ("Parsing " + PCF + ".....")
-
-	f = open(PCF)
-
-	state = -1
-	line = f.readline()
-	while line :
-		if "\n" == line[0]:
-			pass
-		elif  "DEFAULT_OPTIONS" in line[0:15]:
-			state = 0
-		elif "DEFAULT_SEMANTIC" in line[0:16]:
-			state = 1
-		elif "STATES_COLOR" in line[0:12]:
-			state = 2
-		elif "STATES" in line[0:6]:
-			state = 3
-		elif "EVENT_TYPE" in line[0:10]:
-			state = 4
-		elif "GRADIENT_COLOR" in line[0:14]:
-			state = 5
-		elif "GRADIENT_NAMES" in line[0:14]:
-			state = 6
-		else:
-			if state == -1:
-				print ("Error parsing line " + line)
-			elif state == 0:
-				parsePCF_DEFAULT_OPTIONS(line)	
-			elif state == 1:
-				parsePCF_DEFAULT_SEMANTIC(line)
-			elif state == 2:
-				parsePCF_STATES_COLOR(line)
-			elif state == 3:
-				parsePCF_STATES(line)
-			elif state == 4:
-				parsePCF_EVENT_TYPE(line, f)
-			elif state == 5:
-				parsePCF_GRADIENT_COLOR(line)
-			elif state == 6:
-				parsePCF_GRADIENT_NAMES(line)
-		line = f.readline()
-
-	f.close()
-
-#################################################################
-#################################################################
 
 #################################################################
 #################### SHELL FUNCTIONS ############################
@@ -390,8 +142,11 @@ def parsePCF():
 def help_commands():
 	print ("Commands: ")
 	print ("application_time()	- show elapsed real time used by the application in nanoseconds")
-	print ("list_threads()		- show threads executed")
+	print ("list_threads()	- show threads executed")
+	print ("list_functions( [thread] )	- list all functions, if a thread id is provided list all the functions called in the thread")
 	print ("threads_timeline()	- show thread timeline")
+	print ("nCalls_function( <function> )	- number of times a function is called")
+	print ("runningTime_function(<function>, [thread] ) - min, max and average running time of a function")
 
 def application_time():
 	print("Application time: " + str(application.getCompleteTime()) + " nanoseconds")
@@ -400,11 +155,71 @@ def list_threads():
 	for t in threads:
 		threads[t].printDetail()
 
+def list_functions( thread = 0 ):
+	if thread == 0:
+		for i in valid_events:
+			print(events[i])	
+	else:
+		if thread in threads:
+			threads[thread].printListFunctions()
+		else:
+			print ("Please, enter a correct thread id")
+	
+def nCalls_function(function):
+	times = [0]
+	threadL = [0]
+	for t in threads:
+		times.append(threads[t].nCallsFunction(function))
+		threadL.append(t)
+	threadL.append(len(times))
+	times.append(0)
+	plt.bar(threadL, times)
+	plt.xticks(np.arange(len(times))+0.4, threadL);
+	plt.yticks(times)
+	plt.xlabel("Threads")
+	plt.ylabel("nCalls")
+	plt.title("Function " + str(function) + " times called distribution")
+	plt.show()
+
+def runningTime_function(function, thread=0):
+	if thread == 0:
+		minL = [0]
+		maxL = [0]
+		averageL = [0]
+		threadL = [0]
+		for t in threads:
+			minL.append(100)
+			maxL.append(4000)
+			averageL.append(2000)
+			threadL.append(t)
+
+		threadL.append(len(threadL))
+		minL.append(0)
+		maxL.append(0)
+		averageL.append(0)
+		width = 0.27
+		t = np.array(threadL)
+		plt.bar(t, minL, width=width, label='Min')
+		plt.bar(t+width, averageL, width=width, color='red', label='Average')
+		plt.bar(t+2*width, maxL, width=width, color='green', label='Max')
+		plt.xticks(np.arange(len(minL))+0.4, threadL);
+		plt.legend()
+		plt.xlabel("Threads")
+		plt.ylabel("nanoseconds")
+		plt.title("Function " + str(function) + " min, max and average running time")
+		plt.show()
+	elif thread in threads:
+		print ("OK")
+	else:
+		print ("Please provide a correct thread id")
+		
+			
+
 def threads_timeline():
-	matplotlib.pyplot.figure()
+	plt.figure()
 	x = pylab.randn(10000)
-	matplotlib.pyplot.hist(x, 100)
-	matplotlib.pyplot.show()
+	plt.hist(x, 100)
+	plt.show()
 	#matplotlib.pyplot.figure()
 	#N = len(data)
 	#x = numpy.arange(1, N + 1)
@@ -444,13 +259,24 @@ else:
 
 
 # Parsing files
-parseFUNC()
-parsePCF()
-parsePRV()
+parserFUNC = pFUNC.ParserFUNC(FUNC)
+parserFUNC.parseFile()
+# parserFUNC.printFunctions()
 
-for t in threads:
-	threads[t].createCharts()
+parserPFC = pPCF.ParserPCF(PCF)
+parserPFC.parseFile()
+# parserPFC.printDefaultOptions()
+# parserPFC.printStates()
+# parserPFC.printGradients()
+# parserPFC.printEvents()
+
+parserPRV = pPRV.ParserPRV(PRV, parserPFC)
+parserPRV.parseFile()
+# parserPRV.printAppTimes()
+
+#for t in threads:
+#	threads[t].createCharts()
 
 # Start ipython for interactive charts
-from IPython import embed
-embed()
+#from IPython import embed
+#embed()
