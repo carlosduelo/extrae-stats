@@ -46,8 +46,6 @@ class Viso:
 			maxL.append(0)
 			averageL.append(0)
 			width = 0.27
-			print threadL
-			print minL
 			t = np.array(threadL)
 			plt.bar(t, minL, width=width, label='Min')
 			plt.bar(t+width, averageL, width=width, color='red', label='Average')

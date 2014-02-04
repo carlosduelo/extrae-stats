@@ -1,10 +1,16 @@
+import functools
+
 class Function_Data:
 	def __init__(self, _idF, _name):
 		self.idF = _idF
 		self.name = _name
-		self.timeStamps = {} # idT : (average, time, min, max) 
+		self.timeStamps = {} # { idT : ([elapsed_time], n_times, min_elapsed_time, max min_elapsed_time) }
+		self.completeStamp = [] # [elapsed_time]
+		self.minCompleteStamp = 0
+		self.maxCompleteStamp = 0
 		self.nCalls = 0
-		self.last= []
+		self.lastT = []
+		self.lastC = []
 	def __repr__(self):
 		return "Function " + self.name + " " + str(self.idF)
 	def __str__(self):
@@ -14,14 +20,31 @@ class Function_Data:
 		time = 0
 		if tP == 1:
 			self.nCalls += 1
-			self.last.append((tP, tS))
+			self.lastT.append((tP, tS))
+			self.lastC.append(tS)
 		else:
+			# End function
+			if tP == 0:
+				try:
+					t = self.lastC.pop()
+				except IndexError:
+					print ("IndexError: adding timeStamp")
+					exit(1)
+				timeC = tS - t
+				self.completeStamp.append(timeC)
+				if self.minCompleteStamp == 0:
+					self.minCompleteStamp = timeC
+					self.maxCompleteStamp= timeC
+				else:
+					if timeC < self.minCompleteStamp : self.minCompleteStamp = timeC
+					if timeC > self.maxCompleteStamp : self.maxCompleteStamp = timeC
+				
 			try:
-				e = self.last.pop()
+				e = self.lastT.pop()
 				timeB = e[1] 
 				idT = e[0] - 1
 				if tP:
-					self.last.append((tP, tS))
+					self.lastT.append((tP, tS))
 			except IndexError:
 				print ("IndexError: adding timeStamp")
 				exit(1)
@@ -39,8 +62,12 @@ class Function_Data:
 			else:
 				self.timeStamps[idT] = (time, 1, time, time)
 	
-	def getCompleteTime(self):
-		c = 0
-		for i in self.timeStamps:
-			c += self.timeStamps[i][0]/self.timeStamps[i][1]
-		return c
+	def getCompleteAverageTime(self):
+		return functools.reduce(lambda x, y : x + y, self.completeStamp) / len(self.completeStamp) 
+
+	def getCompleteMinTime(self):
+		return self.minCompleteStamp
+
+	def getCompleteMaxTime(self):
+		return self.maxCompleteStamp
+

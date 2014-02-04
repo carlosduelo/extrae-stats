@@ -36,13 +36,22 @@ class Thread_Data:
 					" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
 
 	def getMinTimeFunction(self, function):
-		return 80
+		if function in self.functions:
+			return self.functions[function].getCompleteMinTime()
+		else:
+			return 0
 
 	def getMaxTimeFunction(self, function):
-		return 150
+		if function in self.functions:
+			return self.functions[function].getCompleteMaxTime()
+		else:
+			return 0
 
 	def getAverageTimeFunction(self, function):
-		return 100
+		if function in self.functions:
+			return self.functions[function].getCompleteAverageTime()
+		else:
+			return 0
 
 	def addEvent(self, timeStamp, idF, name, value):
 		if self.timeStart == -1:
