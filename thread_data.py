@@ -1,4 +1,6 @@
-class Thread:
+import function_data as func
+
+class Thread_Data:
 	def __init__(self, _idT):
 		self.idT = _idT
 		self.functions = {}
@@ -12,6 +14,12 @@ class Thread:
 	def printListFunctions(self):
 		for i in self.functions:
 			print (self.functions[i])
+	
+	def getFunctions(self):
+		f = []
+		for i in self.functions:
+			f.append((self.functions[i].idF, self.functions[i].name))
+		return f
 			
 	def nCallsFunction(self, func):
 		if func in self.functions:
@@ -27,32 +35,22 @@ class Thread:
 			print ("Thread " + str(self.idT) + 
 					" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
 
-	def addEvent(self, timeStamp, idF, value):
+	def getMinTimeFunction(self, function):
+		return 80
+
+	def getMaxTimeFunction(self, function):
+		return 150
+
+	def getAverageTimeFunction(self, function):
+		return 100
+
+	def addEvent(self, timeStamp, idF, name, value):
 		if self.timeStart == -1:
 			self.timeStart = timeStamp
 		self.timeEnd = timeStamp
 		if idF in self.functions:
 			self.functions[idF].addTimeStamp(value, timeStamp)
 		else:
-			f = Function(idF)
+			f = func.Function_Data(idF, name)
 			f.addTimeStamp(value, timeStamp)
 			self.functions[idF] = f
-
-	def createCharts(self):
-		print("Thread " + str(self.idT))
-		data = []
-		for f in self.functions:
-			data.append((self.functions[f].idF, self.functions[f].getCompleteTime()))
-			self.functions[f].createChart()
-
-		#matplotlib.pyplot.figure()
-		#N = len(data)
-		#x = numpy.arange(1, N + 1)
-		#y = [ num for (s, num) in data ]
-		#labels = [ s for (s, num) in data ]
-		#width = 1
-		#r1 = matplotlib.pyplot.bar( x, y, width, color="y" )
-		#matplotlib.pyplot.title( "Functions on thread " + str(self.idT))
-		#matplotlib.pyplot.ylabel( 'Nanoseconds' )
-		#matplotlib.pyplot.xticks(x, labels )
-		#matplotlib.pyplot.savefig("thread"+str(self.idT)+".png")

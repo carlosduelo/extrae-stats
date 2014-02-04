@@ -2,14 +2,17 @@
 ######### Functions to parse PRV file ##########################
 #################################################################
 
-import application as ap
+import application_data as ap
 
 class ParserPRV:
 	def __init__(self, _file_name, _parserPCF, _parserFUNC):
 		self.file_name = _file_name
 		self.parserPCF = _parserPCF
 		self.parserFUNC = _parserFUNC
-		self.app		= ap.Application()
+		self.app		= ap.Application_Data()
+
+	def getApplicationData(self):
+		return self.app
 
 	def parseFile(self):
 		print ("Parsing " + self.file_name + ".....")
@@ -50,9 +53,9 @@ class ParserPRV:
 						elif self.parserFUNC.idFunctionValid(e):
 							v = int(elements[i+1])
 							#print ("Thread " + str(thread) + " timeStamp " + str(timeStamp) + " event " + str(e) + " value " + str(v))
-							self.app.addEventFunction(thread, timeStamp, e, v)
+							self.app.addEventFunction(thread, timeStamp, e, self.parserPCF.getNameEvent(e), v)
 						elif self.parserPCF.isEvent(e):
-							self.app.addEvent(thread, timeStamp, e, v)
+							self.app.addEvent(thread, timeStamp, e, self.parserPCF.getNameEvent(e), v)
 						else:
 							print("Undifined event " + str(e))
 
@@ -70,9 +73,6 @@ class ParserPRV:
 				print ("Error parsing line " + line)
 				
 			line = f.readline()
-
-	def	printAppTime(self):
-		self.app.printTime()
 
 #################################################################
 #################################################################

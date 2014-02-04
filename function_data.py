@@ -1,13 +1,14 @@
-class Function:
-	def __init__(self, _idF):
+class Function_Data:
+	def __init__(self, _idF, _name):
 		self.idF = _idF
+		self.name = _name
 		self.timeStamps = {} # idT : (average, time, min, max) 
 		self.nCalls = 0
 		self.last= []
 	def __repr__(self):
-		return "Function " + events[self.idF].name + " " + str(self.idF)
+		return "Function " + self.name + " " + str(self.idF)
 	def __str__(self):
-		return "Function " + events[self.idF].name + " " + str(self.idF)
+		return "Function " + self.name + " " + str(self.idF)
 
 	def addTimeStamp(self, tP, tS):
 		time = 0
@@ -36,20 +37,10 @@ class Function:
 					MT = self.timeStamps[idT][3]
 				self.timeStamps[idT] = (aT, aC, mT, MT) 
 			else:
-				self.timeStamps[idT] = (time,1, time, time)
+				self.timeStamps[idT] = (time, 1, time, time)
 	
 	def getCompleteTime(self):
 		c = 0
 		for i in self.timeStamps:
 			c += self.timeStamps[i][0]/self.timeStamps[i][1]
 		return c
-
-	def createChart(self):
-		print ("Function " + str(events[self.idF])  + " time: " + str(self.getCompleteTime()) + " nanoseconds called: " + str(self.nCalls) + " times")
-		if len(self.timeStamps) > 1:
-			data = []
-			for i in self.timeStamps:
-				data.append((i,self.timeStamps[i][0] / self.timeStamps[i][1]))
-				print ("\t Step " + str(i) + " time: " + str(self.timeStamps[i][0] /self.timeStamps[i][1]) + " nanoseconds, executed " + str(self.timeStamps[i][1])+ " times.")
-
-

@@ -247,5 +247,11 @@ class ParserPCF:
 		for i in self.events:
 			print (self.events[i])
 
+	def getNameEvent(self, e):
+		if e in self.events:
+			return self.events[e].name 
+		else:
+			return ""
+
 #################################################################
 #################################################################
