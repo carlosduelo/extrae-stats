@@ -49,18 +49,16 @@ class DeferFunction
 
 }
 
-#ifdef __cplusplus													
-	#define TRACE_START_METHOD()									\
-		std::string func = typeid(this).name();						\
-		func += ":";												\
-		func += __FUNCTION__;										\
-		static TraceHandler __traceHandler(__FILE__, func.c_str()); \
-		DeferFunction __deferFunction(&__traceHandler);				
-#endif																
+#define TRACE_START_METHOD()									\
+	std::string func = typeid(this).name();						\
+	func += ":";												\
+	func += __FUNCTION__;										\
+	static ExtraeStats::TraceHandler __traceHandler(__FILE__, func.c_str()); \
+	ExtraeStats::DeferFunction __deferFunction(&__traceHandler);				
 
 #define TRACE_START_FUNCTION()									\
-	static TraceHandler __traceHandler(__FILE__, __FUNCTION__); \
-	DeferFunction __deferFunction(&__traceHandler);				
+	static ExtraeStats::TraceHandler __traceHandler(__FILE__, __FUNCTION__); \
+	ExtraeStats::DeferFunction __deferFunction(&__traceHandler);				
 
 #define TRACE_ADD_MARK_FUNCTION()		\
 	__traceHandler.newMark(__LINE__);
