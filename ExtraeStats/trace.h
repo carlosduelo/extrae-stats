@@ -6,6 +6,9 @@
 #include <map>
 #include <string>
 
+namespace ExtraeStats
+{
+
 class Tracer;
 
 class TraceHandler
@@ -42,7 +45,9 @@ class DeferFunction
 			_traceHandler->startFunction();
 		} 
 		~DeferFunction() {  _traceHandler->endFunction(); } 
-}; 
+};
+
+}
 
 #ifdef __cplusplus													
 	#define TRACE_START_METHOD()									\

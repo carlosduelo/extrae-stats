@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 
+namespace ExtraeStats
+{
+
 class Tracer
 {
 	public:
@@ -82,4 +85,6 @@ void TraceHandler::newMark(const int line)
 void TraceHandler::endFunction()
 {
 	Extrae_event(_id, 0);
+}
+
 }
