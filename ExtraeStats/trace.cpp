@@ -1,10 +1,7 @@
 #include "trace.h"
 
-#ifdef USE_UTIL_EXTRAE 
-
 #include <iostream>
 #include <fstream>
-
 
 class Tracer
 {
@@ -86,5 +83,3 @@ void TraceHandler::endFunction()
 {
 	Extrae_event(_id, 0);
 }
-
-#endif

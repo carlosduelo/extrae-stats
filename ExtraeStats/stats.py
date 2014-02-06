@@ -23,6 +23,7 @@ def help_commands():
 	print ("threads_timeline()	- show thread timeline")
 	print ("nCalls_function( <function> )	- number of times a function is called")
 	print ("runningTime_function(<function>, [thread] ) - min, max and average running time of a function")
+	print ("seeSorceCode( <function> )")
 
 def application_time():
 	vis.printAppTime()
@@ -42,7 +43,9 @@ def runningTime_function(function, thread=0):
 def threads_timeline():
 	print("HOLA")
 	
-
+def seeSourceCode(function):
+	mgc = get_ipython().magic
+	mgc("%edit")
 #################################################################
 #################################################################
 

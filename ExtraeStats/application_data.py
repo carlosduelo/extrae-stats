@@ -64,19 +64,19 @@ class Application_Data:
 	def getThreadsID(self):
 		return self.threads.keys()
 
-	def getMinTimeFunction(self, function):
+	def getMinCompleteTimeFunction(self, function):
 		l = []
 		for t in self.threads:
 			l.append(self.threads[t].getMinTimeFunction(function))
 		return l
 		
-	def getMaxTimeFunction(self, function):
+	def getMaxCompleteTimeFunction(self, function):
 		l = []
 		for t in self.threads:
 			l.append(self.threads[t].getMaxTimeFunction(function))
 		return l
 		
-	def getAverageTimeFunction(self, function):
+	def getAverageCompleteTimeFunction(self, function):
 		l = []
 		for t in self.threads:
 			l.append(self.threads[t].getAverageTimeFunction(function))

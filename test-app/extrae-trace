@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ "$#" != "2" ]
+then
+	echo "Usage: extrae-trace <executable> <extrae-config-file>"
+	echo "Please provide the executable and the extrae config file"
+	exit 1
+fi
+
+if [ -z "${EXTRAE_HOME}" ]
+then
+	echo  "Please set EXTRAE_HOME"
+else
+	export LD_LIBRARY_PATH=${EXTRAE_HOME}/lib
+	export EXTRAE_CONFIG_FILE=$2
+
+	$1
+fi

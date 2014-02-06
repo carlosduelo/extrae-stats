@@ -1,8 +1,6 @@
 #ifndef UTIL_EXTRAE_H
 #define UTIL_EXTRAE_H
 
-#ifdef USE_UTIL_EXTRAE 
-
 #include <extrae_user_events.h> 
 #include <boost/thread/mutex.hpp>
 #include <map>
@@ -62,10 +60,5 @@ class DeferFunction
 #define TRACE_ADD_MARK_FUNCTION()		\
 	__traceHandler.newMark(__LINE__);
 	
-
-#else
-
-
-#endif
 
 #endif

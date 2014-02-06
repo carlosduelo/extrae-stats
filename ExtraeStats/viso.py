@@ -37,9 +37,9 @@ class Viso:
 			averageL = [0]
 			threadL = [0]
 			threadL += self.appData.getThreadsID()
-			minL += self.appData.getMinTimeFunction(function)
-			maxL += self.appData.getMaxTimeFunction(function)
-			averageL += self.appData.getAverageTimeFunction(function)
+			minL += self.appData.getMinCompleteTimeFunction(function)
+			maxL += self.appData.getMaxCompleteTimeFunction(function)
+			averageL += self.appData.getAverageCompleteTimeFunction(function)
 
 			threadL.append(len(threadL))
 			minL.append(0)
