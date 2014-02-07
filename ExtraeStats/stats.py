@@ -20,6 +20,7 @@ def help_commands():
 	print ("application_time()	- show elapsed real time used by the application in nanoseconds")
 	print ("list_threads()	- show threads executed")
 	print ("list_functions( [thread] )	- list all functions, if a thread id is provided list all the functions called in the thread")
+	print ("list_intervals_function( thread, function) - list all intervals inside of a function")
 	print ("threads_timeline()	- show thread timeline")
 	print ("nCalls_function( <function> )	- number of times a function is called")
 	print ("runningTime_function(<function>, [thread] ) - min, max and average running time of a function")
@@ -33,6 +34,9 @@ def list_threads():
 
 def list_functions( thread = 0 ):
 	vis.list_functions(thread)
+
+def list_intervals_function(thread, function):
+	vis.list_intervals_function(thread, function)
 	
 def nCalls_function(function):
 	vis.nCalls_function(function)
@@ -41,7 +45,7 @@ def runningTime_function(function, thread=0):
 	vis.runningTime_function(function, thread)
 
 def threads_timeline():
-	print("HOLA")
+	vis.threadsTimeline()
 	
 def seeSourceCode(function):
 	mgc = get_ipython().magic

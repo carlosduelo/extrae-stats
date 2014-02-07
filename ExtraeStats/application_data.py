@@ -67,18 +67,42 @@ class Application_Data:
 	def getMinCompleteTimeFunction(self, function):
 		l = []
 		for t in self.threads:
-			l.append(self.threads[t].getMinTimeFunction(function))
+			l.append(self.threads[t].getMinCompleteTimeFunction(function))
 		return l
 		
 	def getMaxCompleteTimeFunction(self, function):
 		l = []
 		for t in self.threads:
-			l.append(self.threads[t].getMaxTimeFunction(function))
+			l.append(self.threads[t].getMaxCompleteTimeFunction(function))
 		return l
 		
 	def getAverageCompleteTimeFunction(self, function):
 		l = []
 		for t in self.threads:
-			l.append(self.threads[t].getAverageTimeFunction(function))
+			l.append(self.threads[t].getAverageCompleteTimeFunction(function))
 		return l
 		
+	def getIntervalsFunction(self, thread, function):
+		if thread in self.threads:
+			return self.threads[thread].getIntervalsFunction(function)
+		else:
+			return []
+
+	def getAverageIntervalsTimeFunction(self, thread, function):
+		if thread in self.threads:
+			return self.threads[thread].getAverageIntervalsTimeFunction(function)
+		else:
+			return []
+
+	def getMinIntervalsTimeFunction(self, thread, function):
+		if thread in self.threads:
+			return self.threads[thread].getMinIntervalsTimeFunction(function)
+		else:
+			return []
+
+	def getMaxIntervalsTimeFunction(self, thread, function):
+		if thread in self.threads:
+			return self.threads[thread].getMaxIntervalsTimeFunction(function)
+		else:
+			return []
+
