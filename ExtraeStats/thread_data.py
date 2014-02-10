@@ -11,6 +11,9 @@ class Thread_Data:
 	def __str__(self):
 		return "Thread " + str(self.idT)
 
+	def getTimeLine(self):
+		return (self.timeStart, self.timeEnd)
+
 	def printListFunctions(self):
 		for i in self.functions:
 			print (self.functions[i])

@@ -106,3 +106,8 @@ class Application_Data:
 		else:
 			return []
 
+	def getThreadsTimeLine(self):
+		l = {}
+		for t in self.threads:
+			l[t] = self.threads[t].getTimeLine()
+		return l

@@ -100,19 +100,29 @@ class Viso:
 
 	def threadsTimeline(self):
 		fig, ax = plt.subplots()
-		ax.broken_barh([ (110, 30), (150, 10) ] , (10, 9), facecolors='blue')
-		ax.broken_barh([ (10, 50), (100, 20),  (130, 10)] , (20, 9),
-		facecolors=('red', 'yellow', 'green'))
-		ax.set_ylim(5,35)
-		ax.set_xlim(0,200)
-		ax.set_xlabel('seconds since start')
-		ax.set_yticks([15,25])
-		ax.set_yticklabels(['Bill', 'Jim'])
-		ax.grid(True)
-		ax.annotate('race interrupted', (61, 25),
-		xytext=(0.8, 0.9), textcoords='axes fraction',
-		arrowprops=dict(facecolor='black', shrink=0.05),
-		fontsize=16,
-		horizontalalignment='right', verticalalignment='top')
-
+		timelines = self.appData.getThreadsTimeLine()
+		print timelines
+		# Set y limits
+		yw = 10
+		ax.set_ylim(0,2*(len(timelines)+1)*yw )
+		# Set x limits
+		ax.set_xlim(0, timelines[1][1])
+		yticks = []
+		lyticks = []
+		for i in timelines:
+			ypos = 2*i*yw 
+			yticks.append(ypos)
+			if i == 1:
+				lyticks.append("master")
+			else:
+				lyticks.append(str(i))
+			start = timelines[i][0]
+			w = timelines[i][1] - timelines[i][0]
+			ax.broken_barh([ (start, w), ] , (ypos - yw/2, yw))
+		yticks.append(2*len(timelines)*yw)
+		lyticks.append(str(len(timelines)))
+		ax.set_xlabel('nanoseconds')
+		ax.set_ylabel('threads')
+		ax.set_yticks(yticks)
+		ax.set_yticklabels(lyticks)
 		plt.show()

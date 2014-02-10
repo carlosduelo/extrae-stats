@@ -1,7 +1,6 @@
 #ifndef UTIL_EXTRAE_H
 #define UTIL_EXTRAE_H
 
-#include <extrae_user_events.h> 
 #include <boost/thread/mutex.hpp>
 #include <map>
 #include <string>

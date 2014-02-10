@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <extrae_user_events.h> 
 
 namespace ExtraeStats
 {
