@@ -2,6 +2,7 @@
 # Compile ExtraeStats
 include_directories(${EXTRAE_INCLUDE_DIRS})
 add_library(ExtraeStats SHARED trace.cpp )
+target_link_libraries(ExtraeStats ${EXTRAE_LIBRARIES})
 
 # Configure pkh-config file
 configure_file(ExtraeStats.pc.in ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/ExtraeStats.pc @ONLY)
