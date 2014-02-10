@@ -15,7 +15,7 @@ class TraceHandler
 	private:
 		static Tracer	_tracer;
 
-		extrae_type_t		_id;
+		unsigned			_id;
 		std::map<int, int>	_values;
 
 		boost::mutex								_mutex;
