@@ -18,3 +18,6 @@ class Parser:
 
 	def getApplicationData(self):
 		return self.parserPRV.getApplicationData()
+	
+	def getNameEvent(self, e):
+		return self.parserPFC.getNameEvent(e)

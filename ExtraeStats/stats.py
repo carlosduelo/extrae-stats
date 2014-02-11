@@ -52,8 +52,14 @@ def threads_timeline():
 	vis.threadsTimeline()
 	
 def seeSourceCode(function):
-	mgc = get_ipython().magic
-	mgc("%edit")
+	n = parser.getNameEvent(function)
+	if n != "":
+		elements = n.split(":")
+		nombre = elements[0] 
+		mgc = get_ipython().magic
+		mgc("%edit " + nombre)
+	else:
+		print ("Event does not exist")
 #################################################################
 #################################################################
 
