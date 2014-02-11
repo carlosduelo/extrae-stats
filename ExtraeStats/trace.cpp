@@ -18,6 +18,7 @@ class Tracer
 
 		~Tracer()
 		{
+			boost::mutex::scoped_lock lock(_mutex);
 			std::ofstream outFile;
 			outFile.open("functions.func", std::ios::out | std::ios::trunc);
 			outFile<< "#Functions"<<std::endl;

@@ -24,6 +24,7 @@ def help_commands():
 	print ("threads_timeline()	- show thread timeline")
 	print ("nCalls_function( <function> )	- number of times a function is called")
 	print ("runningTime_function(<function>, [thread] ) - min, max and average running time of a function")
+	print ("runningTime_thread( <thread> ) - min, max, and average running time of every function on a thread")
 	print ("seeSorceCode( <function> )")
 
 def application_time():
@@ -43,6 +44,9 @@ def nCalls_function(function):
 
 def runningTime_function(function, thread=0):
 	vis.runningTime_function(function, thread)
+
+def runningTime_thread(thread):
+	vis.runningTime_thread(thread)
 
 def threads_timeline():
 	vis.threadsTimeline()

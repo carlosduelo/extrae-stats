@@ -29,6 +29,13 @@ class Application_Data:
 		for t in self.threads:
 			self.threads[t].printDetail()
 
+	def getFunctions(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getFunctions()
+		else:
+			print ("Please, enter a correct thread id")
+			return []
+
 	def list_functions(self, thread = 0):
 		if thread == 0:
 			s = set()
@@ -37,8 +44,8 @@ class Application_Data:
 			for e in s:
 				print ("Function " + e[1] + " " + str(e[0]))
 		else:
-			if thread in threads:
-				threads[thread].printListFunctions()
+			if thread in self.threads:
+				self.threads[thread].printListFunctions()
 			else:
 				print ("Please, enter a correct thread id")
 		
@@ -81,6 +88,24 @@ class Application_Data:
 		for t in self.threads:
 			l.append(self.threads[t].getAverageCompleteTimeFunction(function))
 		return l
+		
+	def getMinCompleteTimeThread(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getMinCompleteTimeThread()
+		else:
+			return []
+		
+	def getMaxCompleteTimeThread(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getMaxCompleteTimeThread()
+		else:
+			return []
+		
+	def getAverageCompleteTimeThread(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getAverageCompleteTimeThread()
+		else:
+			return []
 		
 	def getIntervalsFunction(self, thread, function):
 		if thread in self.threads:

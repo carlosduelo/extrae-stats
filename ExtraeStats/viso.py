@@ -98,6 +98,42 @@ class Viso:
 			plt.title("Function " + str(function) + " min, max and average running time")
 			plt.show()
 
+	def runningTime_thread(self, thread):
+		minL = []
+		maxL = []
+		averageL = []
+		functionsL = []
+		functionsA = self.appData.getFunctions(thread)
+		for e in functionsA:
+			functionsL.append(e[0])
+		minL += self.appData.getMinCompleteTimeThread(thread)
+		maxL += self.appData.getMaxCompleteTimeThread(thread)
+		averageL += self.appData.getAverageCompleteTimeThread(thread)
+
+		print minL
+		print maxL
+		print averageL
+		print functionsL
+
+		if	(len(minL) == 0 or
+			len(maxL) == 0 or
+			len(averageL) == 0 or
+			len(functionsL) == 0):
+			print ("No data")
+			return None
+
+		width = 0.27
+		t = np.array(functionsL)
+		plt.bar(t, minL, width=width, label='Min')
+		plt.bar(t+width, averageL, width=width, color='red', label='Average')
+		plt.bar(t+2*width, maxL, width=width, color='green', label='Max')
+		plt.xticks(t+0.4, functionsL);
+		plt.legend()
+		plt.xlabel("Functions")
+		plt.ylabel("nanoseconds")
+		plt.title("Thread " + str(thread) + " min, max and average running time of every function")
+		plt.show()
+
 	def threadsTimeline(self):
 		fig, ax = plt.subplots()
 		timelines = self.appData.getThreadsTimeLine()
@@ -112,10 +148,7 @@ class Viso:
 		for i in timelines:
 			ypos = 2*i*yw 
 			yticks.append(ypos)
-			if i == 1:
-				lyticks.append("master")
-			else:
-				lyticks.append(str(i))
+			lyticks.append(str(i))
 			start = timelines[i][0]
 			w = timelines[i][1] - timelines[i][0]
 			ax.broken_barh([ (start, w), ] , (ypos - yw/2, yw))

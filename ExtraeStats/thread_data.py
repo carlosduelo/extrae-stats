@@ -31,12 +31,8 @@ class Thread_Data:
 			return 0
 
 	def printDetail(self):
-		if self.idT == 1:
-			print ("Main thread " +  
-					" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
-		else:	
-			print ("Thread " + str(self.idT) + 
-					" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
+		print ("Thread " + str(self.idT) + 
+				" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
 
 	def getMinCompleteTimeFunction(self, function):
 		if function in self.functions:
@@ -79,6 +75,24 @@ class Thread_Data:
 			return self.functions[function].getMaxIntervalsTime()
 		else:
 			return []
+
+	def getMinCompleteTimeThread(self):
+		l = []
+		for f in self.functions:
+			l.append(self.functions[f].getCompleteMinTime())
+		return l
+
+	def getMaxCompleteTimeThread(self):
+		l = []
+		for f in self.functions:
+			l.append(self.functions[f].getCompleteMaxTime())
+		return l
+
+	def getAverageCompleteTimeThread(self):
+		l = []
+		for f in self.functions:
+			l.append(self.functions[f].getCompleteAverageTime())
+		return l
 
 	def addEvent(self, timeStamp, idF, name, value):
 		if self.timeStart == -1:
