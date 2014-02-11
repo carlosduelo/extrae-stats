@@ -21,20 +21,33 @@ class Viso:
 		for i in l:
 			print (l[i])
 
-	def nCalls_function(self, function):
-		times = [0]
-		threadL = [0]
-		times += self.appData.nCalls_function(function)
-		threadL += self.appData.getThreadsID()
-		threadL.append(len(times))
-		times.append(0)
-		plt.bar(threadL, times)
-		plt.xticks(np.arange(len(times))+0.4, threadL);
-		plt.yticks(times)
-		plt.xlabel("Threads")
-		plt.ylabel("nCalls")
-		plt.title("Function " + str(function) + " times called distribution")
-		plt.show()
+	def nCalls_function(self, function, thread):
+		if thread == 0:
+			times = [0]
+			threadL = [0]
+			times += self.appData.nCalls_function(function, thread)
+			threadL += self.appData.getThreadsID()
+			threadL.append(len(times))
+			times.append(0)
+			plt.bar(threadL, times)
+			plt.xticks(np.arange(len(times))+0.4, threadL);
+			plt.yticks(times)
+			plt.xlabel("Threads")
+			plt.ylabel("nCalls")
+			plt.title("Function " + str(function) + " times called distribution")
+			plt.show()
+		else:
+			times = []
+			threadL = []
+			times += self.appData.nCalls_function(function, thread)
+			threadL += self.appData.getIntervalsFunction(thread, function)
+			plt.bar(threadL, times)
+			plt.xticks(np.arange(len(times))+0.4, threadL);
+			plt.yticks(times)
+			plt.xlabel("Intervals")
+			plt.ylabel("nCalls")
+			plt.title("Function " + str(function) + " times called in different intervals")
+			plt.show()
 
 	def runningTime_function(self, function, thread):
 		if thread == 0:
@@ -110,11 +123,6 @@ class Viso:
 		maxL += self.appData.getMaxCompleteTimeThread(thread)
 		averageL += self.appData.getAverageCompleteTimeThread(thread)
 
-		print minL
-		print maxL
-		print averageL
-		print functionsL
-
 		if	(len(minL) == 0 or
 			len(maxL) == 0 or
 			len(averageL) == 0 or
@@ -137,7 +145,6 @@ class Viso:
 	def threadsTimeline(self):
 		fig, ax = plt.subplots()
 		timelines = self.appData.getThreadsTimeLine()
-		print timelines
 		# Set y limits
 		yw = 10
 		ax.set_ylim(0,2*(len(timelines)+1)*yw )

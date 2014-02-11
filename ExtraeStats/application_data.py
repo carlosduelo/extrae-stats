@@ -62,11 +62,17 @@ class Application_Data:
 	def addEvent(self, thread, timeStamp, idEvent, name, value):
 		pass
 
-	def nCalls_function(self, function):
-		l = []
-		for t in self.threads:
-			l.append(self.threads[t].nCallsFunction(function))
-		return l
+	def nCalls_function(self, function, thread):
+		if thread == 0:
+			l = []
+			for t in self.threads:
+				l.append(self.threads[t].nCallsFunction(function))
+			return l
+		elif thread in self.threads:
+			return self.threads[thread].getListnCallsIntervalFunction(function)
+		else:
+			return []
+			
 
 	def getThreadsID(self):
 		return self.threads.keys()

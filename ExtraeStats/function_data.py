@@ -16,6 +16,11 @@ class Function_Data:
 	def __str__(self):
 		return "Function " + self.name + " " + str(self.idF)
 		
+	def getListnCallsInterval(self):
+		l = []
+		for i in self.timeStamps:
+			l.append(self.timeStamps[i][1])
+		return l
 
 	def addTimeStamp(self, tP, tS):
 		time = 0

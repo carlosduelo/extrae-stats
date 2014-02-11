@@ -30,6 +30,12 @@ class Thread_Data:
 		else:
 			return 0
 
+	def getListnCallsIntervalFunction(self, function):
+		l = []
+		if function in self.functions:
+			l = self.functions[function].getListnCallsInterval()
+		return l
+
 	def printDetail(self):
 		print ("Thread " + str(self.idT) + 
 				" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")

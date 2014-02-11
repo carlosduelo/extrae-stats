@@ -22,7 +22,7 @@ def help_commands():
 	print ("list_functions( [thread] )	- list all functions, if a thread id is provided list all the functions called in the thread")
 	print ("list_intervals_function( thread, function) - list all intervals inside of a function")
 	print ("threads_timeline()	- show thread timeline")
-	print ("nCalls_function( <function> )	- number of times a function is called")
+	print ("nCalls_function( <function>, [thread]  )	- number of times a function is called")
 	print ("runningTime_function(<function>, [thread] ) - min, max and average running time of a function")
 	print ("runningTime_thread( <thread> ) - min, max, and average running time of every function on a thread")
 	print ("seeSorceCode( <function> )")
@@ -39,8 +39,8 @@ def list_functions( thread = 0 ):
 def list_intervals_function(thread, function):
 	vis.list_intervals_function(thread, function)
 	
-def nCalls_function(function):
-	vis.nCalls_function(function)
+def nCalls_function(function, thread=0):
+	vis.nCalls_function(function, thread)
 
 def runningTime_function(function, thread=0):
 	vis.runningTime_function(function, thread)
