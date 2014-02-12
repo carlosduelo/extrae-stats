@@ -30,7 +30,12 @@ class Application_Data:
 			self.threads[t].printDetail()
 
 	def getFunctions(self, thread):
-		if thread in self.threads:
+		if thread == 0:
+			s = set()
+			for t in self.threads:
+				s = s.union(set(self.threads[t].getFunctions()))
+			return list(s)
+		elif thread in self.threads:
 			return self.threads[thread].getFunctions()
 		else:
 			print ("Please, enter a correct thread id")
@@ -72,7 +77,9 @@ class Application_Data:
 			return self.threads[thread].getListnCallsIntervalFunction(function)
 		else:
 			return []
-			
+
+	def nCalls_function_in_thread(self, function, thread):
+		return self.threads[thread].nCallsFunction(function)
 
 	def getThreadsID(self):
 		return self.threads.keys()

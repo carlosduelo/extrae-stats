@@ -23,8 +23,11 @@ def help_commands():
 	print ("list_intervals_function( thread, function) - list all intervals inside of a function")
 	print ("threads_timeline()	- show thread timeline")
 	print ("nCalls_function( <function>, [thread]  )	- number of times a function is called")
+	print ("nCalls_thread( [thread]  )	- number of times every function is called in a thread")
 	print ("runningTime_function(<function>, [thread] ) - min, max and average running time of a function")
 	print ("runningTime_thread( <thread> ) - min, max, and average running time of every function on a thread")
+	print ("runningAvgTime_function(<function>, [thread] ) - average running time of a function")
+	print ("runningAvgTime_thread( <thread> ) - average running time of every function on a thread")
 	print ("seeSorceCode( <function> )")
 
 def application_time():
@@ -42,11 +45,20 @@ def list_intervals_function(thread, function):
 def nCalls_function(function, thread=0):
 	vis.nCalls_function(function, thread)
 
+def nCalls_thread(thread=0):
+	vis.nCalls_thread(thread)
+
 def runningTime_function(function, thread=0):
 	vis.runningTime_function(function, thread)
 
 def runningTime_thread(thread):
 	vis.runningTime_thread(thread)
+
+def runningAvgTime_function(function, thread=0):
+	vis.runningAvgTime_function(function, thread)
+
+def runningAvgTime_thread(thread):
+	vis.runningAvgTime_thread(thread)
 
 def threads_timeline():
 	vis.threadsTimeline()

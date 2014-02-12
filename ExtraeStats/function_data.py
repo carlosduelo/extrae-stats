@@ -34,8 +34,8 @@ class Function_Data:
 				try:
 					t = self.lastC.pop()
 				except IndexError:
-					print ("IndexError: adding timeStamp")
-					exit(1)
+					print ("IndexError: adding timeStamp in function " + str(self.idF) + " " + self.name + " " +  str(tP) + " " + str(tS) + "\n Discarded")
+					return
 				timeC = tS - t
 				self.completeStamp.append(timeC)
 				if self.minCompleteStamp == 0:
