@@ -16,12 +16,12 @@ class TraceHandler
 		static Tracer	_tracer;
 
 		unsigned			_id;
-		std::map<int, int>	_values;
+		std::map<int, int>*	_values;
 
-		boost::mutex								_mutex;
+		boost::mutex		_mutex;
 	
 	public:
-		TraceHandler(const char * file_name, const char * function_name);
+		TraceHandler(const char * file_name, const char * function_name, const int line);
 
 		~TraceHandler();
 
@@ -52,11 +52,11 @@ class DeferFunction
 	std::string func = typeid(this).name();						\
 	func += ":";												\
 	func += __FUNCTION__;										\
-	static ExtraeStats::TraceHandler __traceHandler(__FILE__, func.c_str()); \
+	static ExtraeStats::TraceHandler __traceHandler(__FILE__, func.c_str(), __LINE__); \
 	ExtraeStats::DeferFunction __deferFunction(&__traceHandler);				
 
 #define TRACE_START_FUNCTION()									\
-	static ExtraeStats::TraceHandler __traceHandler(__FILE__, __FUNCTION__); \
+	static ExtraeStats::TraceHandler __traceHandler(__FILE__, __FUNCTION__, __LINE__); \
 	ExtraeStats::DeferFunction __deferFunction(&__traceHandler);				
 
 #define TRACE_ADD_MARK_FUNCTION()		\

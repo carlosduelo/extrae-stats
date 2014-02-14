@@ -79,6 +79,7 @@ class Function_Data:
 		return self.maxCompleteStamp
 
 	def getIntervals(self):
+		print self.timeStamps.keys()
 		return self.timeStamps.keys()
 
 	def getAverageIntervalsTime(self):

@@ -1,10 +1,12 @@
+import parser as pr 
 import application_data as ap
 import numpy as np
 import matplotlib.pyplot as plt 
 
 class Viso:
-	def __init__(self, _applicationData):
-		self.appData = _applicationData
+	def __init__(self, _parser):
+		self.parser = _parser
+		self.appData = _parser.getApplicationData()
 	
 	def printAppTime(self):
 		self.appData.printTime()
@@ -16,10 +18,12 @@ class Viso:
 		self.appData.list_functions(thread)
 
 	def list_intervals_function(self, thread, function):
-		l = self.appData.getIntervalsFunction(thread, function)
+		lineMarks = self.parser.getLineMarks(function)
 		print ("Intervals of function " + str(function) + " on thread " + str(thread))
-		for i in l:
-			print (l[i])
+		for i in range(1, len(lineMarks)):
+			print ("Interval " + str(i-1) + " lines: " + str(lineMarks[i]) + " - " + str(lineMarks[i+1]))
+		print ("Interval " + str(len(lineMarks)-1) + " lines: " + str(lineMarks[len(lineMarks)]) + " -  end function")
+
 
 	def nCalls_function(self, function, thread):
 		if thread == 0:

@@ -21,3 +21,6 @@ class Parser:
 	
 	def getNameEvent(self, e):
 		return self.parserPFC.getNameEvent(e)
+	
+	def getLineMarks(self, function):
+		return self.parserFUNC.getLineMarks(function)

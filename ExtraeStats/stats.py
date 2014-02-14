@@ -101,7 +101,7 @@ parser = pr.Parser(FUNC, PCF, PRV)
 parser.parseFiles()
 
 # Create Viso object
-vis = viso.Viso(parser.getApplicationData())
+vis = viso.Viso(parser)
 
 # Start ipython for interactive charts
 from IPython import embed
