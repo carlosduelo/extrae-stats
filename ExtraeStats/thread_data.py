@@ -6,6 +6,7 @@ class Thread_Data:
 		self.functions = {}
 		self.timeStart = -1
 		self.timeEnd = 0
+		self.stackFunctions = []
 	def __repr__(self):
 		return "Thread " + str(self.idT)
 	def __str__(self):
@@ -13,6 +14,9 @@ class Thread_Data:
 
 	def getTimeLine(self):
 		return (self.timeStart, self.timeEnd)
+	
+	def getCompleteTime(self):
+		return self.timeEnd - self.timeStart
 
 	def printListFunctions(self):
 		for i in self.functions:
@@ -39,6 +43,12 @@ class Thread_Data:
 	def printDetail(self):
 		print ("Thread " + str(self.idT) + 
 				" (" + 	str(self.timeStart) + ", " + str(self.timeEnd) + ") ")
+
+	def getCompleteTimeThread(self):
+		l = []
+		for f in self.functions:
+			l.append(self.functions[f].getCompleteTime())
+		return l
 
 	def getMinCompleteTimeFunction(self, function):
 		if function in self.functions:
@@ -104,6 +114,13 @@ class Thread_Data:
 		if self.timeStart == -1:
 			self.timeStart = timeStamp
 		self.timeEnd = timeStamp
+		if value == 1:
+			self.stackFunctions.append(idF)
+		if value == 0:
+			if self.stackFunctions[-1] != idF:
+				print ("Error,") 
+			else:
+				self.stackFunctions.pop()
 		if idF in self.functions:
 			self.functions[idF].addTimeStamp(value, timeStamp)
 		else:

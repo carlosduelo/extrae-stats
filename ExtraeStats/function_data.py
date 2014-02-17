@@ -69,6 +69,9 @@ class Function_Data:
 			else:
 				self.timeStamps[idT] = ([time], 1, time, time)
 	
+	def getCompleteTime(self):
+		return functools.reduce(lambda x, y : x + y, self.completeStamp)
+
 	def getCompleteAverageTime(self):
 		return functools.reduce(lambda x, y : x + y, self.completeStamp) / len(self.completeStamp) 
 

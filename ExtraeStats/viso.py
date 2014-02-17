@@ -2,6 +2,7 @@ import parser as pr
 import application_data as ap
 import numpy as np
 import matplotlib.pyplot as plt 
+import math
 
 class Viso:
 	def __init__(self, _parser):
@@ -259,4 +260,37 @@ class Viso:
 		plt.xlabel("Functions")
 		plt.ylabel("nanoseconds")
 		plt.title("Thread " + str(thread) + " average running time of every function")
+		plt.show()
+
+	def thread_function_summary(self, thread):
+		appTime = self.appData.getCompleteTimeThread(thread)
+		other = appTime
+		averageL = []
+		functionsL = []
+		functionsA = self.appData.getFunctions(thread)
+		labels = []
+		percen = []
+		for e in functionsA:
+			functionsL.append(e[0])
+			labels.append(str(e[0]))
+		averageL += self.appData.getCompleteTimeFunctionsThread(thread)
+		for i in range(0,len(averageL)):
+			other -= averageL[i] 
+			p = (averageL[i]*100.0)/float(appTime)
+			labels[i] += " %.2g " % p + " %"
+			percen.append(p)
+
+		if other < 0:
+			print ("Error function time recollected is greater than application time")
+		# Others
+		labels.append("Others")
+		percen.append((other*100.0)/float(appTime))
+
+		if	(len(averageL) == 0 or
+			len(functionsL) == 0):
+			print ("No data")
+			return None
+
+		patches, texts = plt.pie(percen)
+		plt.legend(patches, labels, loc="best")
 		plt.show()

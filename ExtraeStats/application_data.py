@@ -78,6 +78,18 @@ class Application_Data:
 		else:
 			return []
 
+	def getCompleteTimeThread(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getCompleteTime()
+		else:
+			return 0
+
+	def getCompleteTimeFunctionsThread(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getCompleteTimeThread()
+		else:
+			return []
+
 	def nCalls_function_in_thread(self, function, thread):
 		return self.threads[thread].nCallsFunction(function)
 
