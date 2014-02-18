@@ -1,7 +1,7 @@
 
 # Compile ExtraeStats
 include_directories(${EXTRAE_INCLUDE_DIRS})
-add_library(ExtraeStats SHARED trace.cpp )
+add_library(ExtraeStats STATIC trace.cpp )
 target_link_libraries(ExtraeStats ${EXTRAE_LIBRARIES})
 
 # Configure pkh-config file
@@ -9,7 +9,7 @@ configure_file(ExtraeStats.pc.in ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/ExtraeSta
 
 # install
 install(FILES trace.h DESTINATION include/ExtraeStats )
-install (TARGETS ExtraeStats LIBRARY DESTINATION lib)
+install (TARGETS ExtraeStats LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install (FILES	application_data.py
 				function_data.py
 				parseFUNC.py

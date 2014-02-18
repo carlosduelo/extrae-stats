@@ -93,7 +93,6 @@ TraceHandler::~TraceHandler()
 
 void TraceHandler::startFunction()
 {
-	boost::mutex::scoped_lock lock(_mutex);
 	Extrae_event(_id, 1);
 }
 
