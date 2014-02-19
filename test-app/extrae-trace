@@ -14,5 +14,5 @@ else
 	export LD_LIBRARY_PATH=${EXTRAE_HOME}/lib
 	export EXTRAE_CONFIG_FILE=$2
 
-	$1
+	LD_PRELOAD=@EXTRAE_LIBRARIES@ $1
 fi

@@ -9,7 +9,8 @@ if (Boost_FOUND)
 	add_executable(testExtraeStats test.cpp)
 	target_link_libraries(testExtraeStats ExtraeStats ${Boost_LIBRARIES})
 
-	install(FILES extrae-trace extrae-config-file-example.xml DESTINATION bin/ExtraeStats)
+	install(FILES extrae-config-file-example.xml DESTINATION bin/ExtraeStats)
+	configure_file(extrae-trace ${CMAKE_INSTALL_PREFIX}/bin/ExtraeStats/extrae-trace @ONLY)
 
 else()
 	message(FATAL_ERROR "Not found Boost")
