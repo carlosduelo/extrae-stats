@@ -2,6 +2,7 @@ import parser as pr
 import application_data as ap
 import numpy as np
 import matplotlib.pyplot as plt 
+import networkx as nx
 import math
 
 class Viso:
@@ -218,26 +219,33 @@ class Viso:
 	def threadsTimeline(self):
 		fig, ax = plt.subplots()
 		timelines = self.appData.getThreadsTimeLine()
+		# add application time
+		timelines[0] = (self.appData.timeStart, self.appData.timeEnd)
+		print "-----"
+		print timelines
 		# Set y limits
 		yw = 10
-		ax.set_ylim(0,2*(len(timelines)+1)*yw )
+		ax.set_ylim(-10 ,2*(max(timelines.keys())+1)*yw )
 		# Set x limits
-		ax.set_xlim(0, timelines[1][1])
+		ax.set_xlim(0, timelines[0][1])
 		yticks = []
 		lyticks = []
 		for i in timelines:
 			ypos = 2*i*yw 
 			yticks.append(ypos)
-			lyticks.append(str(i))
 			start = timelines[i][0]
 			w = timelines[i][1] - timelines[i][0]
-			ax.broken_barh([ (start, w), ] , (ypos - yw/2, yw))
-		yticks.append(2*len(timelines)*yw)
-		lyticks.append(str(len(timelines)))
+			if i == 0:
+				lyticks.append("Application")
+				ax.broken_barh([ (start, w), ] , (ypos - yw/2, yw))
+			else:
+				lyticks.append("Thread "+str(i))
+				ax.broken_barh([ (start, w), ] , (ypos - yw/2, yw))
 		ax.set_xlabel('nanoseconds')
 		ax.set_ylabel('threads')
 		ax.set_yticks(yticks)
 		ax.set_yticklabels(lyticks)
+		ax.legend() 
 		plt.show()
 
 	def runningAvgTime_thread(self, thread):
@@ -293,4 +301,19 @@ class Viso:
 
 		patches, texts = plt.pie(percen)
 		plt.legend(patches, labels, loc="best")
+		plt.show()
+
+	def drawThreadTree(self, thread):
+		tree = self.appData.getThreadTree(thread)
+		if len(tree) == 0:
+			print ("Enter a correct thread id")
+			return
+		G = nx.MultiDiGraph()
+		print tree
+		for f in tree:
+			G.add_node(f)
+			if len(tree[f]) > 0:
+				for ff in tree[f]:
+					G.add_edge(f, ff)
+		nx.draw(G)
 		plt.show()

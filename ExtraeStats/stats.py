@@ -29,6 +29,7 @@ def help_commands():
 	print ("runningAvgTime_function(<function>, [thread] ) - average running time of a function")
 	print ("runningAvgTime_thread( <thread> ) - average running time of every function on a thread")
 	print ("thread_function_summary( <thread> ) - summary")
+	print ("thread_tree( <thread> ) - draw function node chart ")
 	print ("seeSorceCode( <function> )")
 
 def application_time():
@@ -67,6 +68,9 @@ def threads_timeline():
 def thread_function_summary(thread):
 	vis.thread_function_summary(thread)
 	
+def thread_tree(thread):
+	vis.drawThreadTree(thread)
+
 def seeSourceCode(function):
 	n = parser.getNameEvent(function)
 	if n != "":

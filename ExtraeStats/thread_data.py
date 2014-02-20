@@ -7,10 +7,14 @@ class Thread_Data:
 		self.timeStart = -1
 		self.timeEnd = 0
 		self.stackFunctions = []
+		self.tree = {} # { idF : [idF0 , idF1, ..]
 	def __repr__(self):
 		return "Thread " + str(self.idT)
 	def __str__(self):
 		return "Thread " + str(self.idT)
+
+	def getThreadTree(self):
+		return self.tree 
 
 	def getTimeLine(self):
 		return (self.timeStart, self.timeEnd)
@@ -115,10 +119,16 @@ class Thread_Data:
 			self.timeStart = timeStamp
 		self.timeEnd = timeStamp
 		if value == 1:
+			if len(self.stackFunctions) > 0:
+				calledFrom = self.stackFunctions[-1]
+				if idF not in self.tree[calledFrom]:
+					self.tree[calledFrom].append(idF)
+			if idF not in self.tree:
+				self.tree[idF] = []
 			self.stackFunctions.append(idF)
 		if value == 0:
 			if self.stackFunctions[-1] != idF:
-				print ("Error,") 
+				print ("Error, inconsistent function stack") 
 			else:
 				self.stackFunctions.pop()
 		if idF in self.functions:

@@ -41,6 +41,12 @@ class Application_Data:
 			print ("Please, enter a correct thread id")
 			return []
 
+	def getThreadTree(self, thread):
+		if thread in self.threads:
+			return self.threads[thread].getThreadTree()
+		else:
+			return {}
+
 	def list_functions(self, thread = 0):
 		if thread == 0:
 			s = set()
