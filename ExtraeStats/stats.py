@@ -28,6 +28,8 @@ def help_commands():
 	print ("runningTime_thread( <thread> ) - min, max, and average running time of every function on a thread")
 	print ("runningAvgTime_function(<function>, [thread] ) - average running time of a function")
 	print ("runningAvgTime_thread( <thread> ) - average running time of every function on a thread")
+	print ("listRunningAvgTime_function(<function>, [thread] ) - average running time of a function")
+	print ("listRunningAvgTime_thread( <thread> ) - average running time of every function on a thread")
 	print ("thread_function_summary( <thread> ) - summary")
 	print ("thread_tree( <thread> ) - draw function node chart ")
 	print ("seeSorceCode( <function> )")
@@ -61,6 +63,12 @@ def runningAvgTime_function(function, thread=0):
 
 def runningAvgTime_thread(thread):
 	vis.runningAvgTime_thread(thread)
+
+def listRunningAvgTime_function(function, thread=0):
+	vis.listRunningAvgTime_function(function, thread)
+
+def listRunningAvgTime_thread(thread):
+	vis.listRunningAvgTime_thread(thread)
 
 def threads_timeline():
 	vis.threadsTimeline()

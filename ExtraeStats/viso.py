@@ -184,6 +184,16 @@ class Viso:
 			plt.ylabel("nanoseconds")
 			plt.title("Function " + str(function) + " average running time")
 			plt.show()
+
+	def listRunningAvgTime_function(self, function, thread):
+		averageL = []
+		intervals = []
+		intervals += self.appData.getIntervalsFunction(thread, function)
+		averageL += self.appData.getAverageIntervalsTimeFunction(thread, function)
+
+		print ("Function " + str(function) + " average running time")
+		for i in range(0,len(intervals)):
+			print("\tInterval " + str(intervals[i]) + " " + str(averageL[i]) + " nanoseconds")
 	
 	def runningTime_thread(self, thread):
 		minL = []
@@ -269,6 +279,17 @@ class Viso:
 		plt.ylabel("nanoseconds")
 		plt.title("Thread " + str(thread) + " average running time of every function")
 		plt.show()
+
+	def listRunningAvgTime_thread(self, thread):
+		averageL = []
+		functionsL = []
+		functionsA = self.appData.getFunctions(thread)
+		for e in functionsA:
+			functionsL.append(e[0])
+		averageL += self.appData.getAverageCompleteTimeThread(thread)
+		print ("Thread " + str(thread) + " average running time of every function")
+		for i in range(0,len(functionsL)):
+			print ("\t Function " + str(functionsL[i]) + " average time " + str(averageL[i]) + " nanoseconds")
 
 	def thread_function_summary(self, thread):
 		appTime = self.appData.getCompleteTimeThread(thread)
